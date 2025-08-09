@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Shield, FileText, Calculator, Check, X, Clock, AlertTriangle, Plus, Search, Filter, Eye, Download } from 'lucide-react';
+import { DocumentHandler, DocumentUploadComponent, DocumentListComponent } from './DocumentHandler';
+import CoverageCalculator from './CoverageCalculator';
+
+// 2. Add these imports to the existing ones (if not already present)
+import { TrendingUp, BarChart3, PieChart, DollarSign } from 'lucide-react';
 
 const InsuranceClientPage = () => {
     // Get user from localStorage
@@ -20,7 +25,8 @@ const InsuranceClientPage = () => {
         claim_type: '',
         incident_date: '',
         claim_amount: '',
-        description: ''
+        description: '',
+        supporting_documents: []
     });
     
     // Quote calculator state
@@ -62,80 +68,141 @@ const InsuranceClientPage = () => {
         }
     };
     
-    const fetchUserClaims = async () => {
-        try {
-            const response = await fetch(`${API_URL}/user/${user_id}`);
-            if (response.ok) {
-                const userClaims = await response.json();
-                // Ensure userClaims is always an array
-                setClaims(Array.isArray(userClaims) ? userClaims : []);
-            } else {
-                throw new Error('Failed to fetch claims');
-            }
-        } catch (error) {
-            console.error('Error fetching user claims:', error);
-            setClaims([]); // Set empty array on error
-            showMessage('Failed to load your claims', 'error');
+  const fetchUserClaims = async () => {
+    try {
+        const response = await fetch(`${API_URL}/user/${user_id}`);
+        if (response.ok) {
+            const responseData = await response.json();
+            // Handle the response structure correctly
+            const userClaims = responseData.claims || responseData; // Try claims property first, fallback to responseData
+            // Ensure userClaims is always an array
+            setClaims(Array.isArray(userClaims) ? userClaims : []);
+        } else {
+            throw new Error('Failed to fetch claims');
         }
-    };
-    
+    } catch (error) {
+        console.error('Error fetching user claims:', error);
+        setClaims([]); // Set empty array on error
+        showMessage('Failed to load your claims', 'error');
+    }
+};
     const fetchUserSummary = async () => {
-        try {
-            const response = await fetch(`${API_URL}/user/${user_id}/summary`);
-            if (response.ok) {
-                const summary = await response.json();
-                setUserSummary(summary);
-            }
-        } catch (error) {
-            console.error('Error fetching user summary:', error);
+    try {
+        const response = await fetch(`${API_URL}/user/${user_id}/summary`);
+        if (response.ok) {
+            const responseData = await response.json();
+            // Handle the new API response structure
+            const summary = {
+                total_claims: responseData.overall_summary?.total_claims || 0,
+                total_claimed: responseData.overall_summary?.total_claimed_amount || 0,
+                total_approved: responseData.overall_summary?.total_received || 0,
+                approved_claims: responseData.overall_summary?.approved_claims || 0,
+                pending_claims: responseData.overall_summary?.pending_claims || 0,
+                rejected_claims: responseData.overall_summary?.rejected_claims || 0,
+                under_review_claims: responseData.overall_summary?.under_review_claims || 0,
+                by_insurance_type: responseData.by_insurance_type || []
+            };
+            setUserSummary(summary);
         }
-    };
+    } catch (error) {
+        console.error('Error fetching user summary:', error);
+    }
+};
+   const handleDocumentsChange = (newDocuments) => {
+    setClaimForm({
+        ...claimForm,
+        supporting_documents: newDocuments
+    });
+};
+
+const handleDocumentError = (errorMessage) => {
+    showMessage(errorMessage, 'error');
+};
+
+// Update your handleSubmitClaim function to handle files
+const handleSubmitClaim = async (e) => {
+    e.preventDefault();
+    if (!user_id) {
+        showMessage('Please log in to submit a claim', 'error');
+        return;
+    }
     
-    const handleSubmitClaim = async (e) => {
-        e.preventDefault();
-        if (!user_id) {
-            showMessage('Please log in to submit a claim', 'error');
-            return;
-        }
+    setLoading(true);
+    try {
+        // Create FormData for file uploads
+        const formData = new FormData();
         
-        setLoading(true);
-        try {
-            const response = await fetch(`${API_URL}/submit`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...claimForm,
-                    user_id
-                })
+        // Add all form fields
+        formData.append('user_id', user_id);
+        formData.append('insurance_type', claimForm.insurance_type);
+        formData.append('insurance_category', claimForm.insurance_category);
+        formData.append('claim_type', claimForm.claim_type);
+        formData.append('incident_date', claimForm.incident_date);
+        formData.append('claim_amount', claimForm.claim_amount);
+        formData.append('description', claimForm.description);
+        
+        // Add files
+        claimForm.supporting_documents.forEach((file) => {
+            formData.append('supporting_documents', file);
+        });
+        
+        const response = await fetch(`${API_URL}/submit`, {
+            method: 'POST',
+            body: formData // Don't set Content-Type header when using FormData
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            showMessage('Claim submitted successfully! Claim ID: ' + result.claim_id, 'success');
+            setClaimForm({
+                insurance_type: '',
+                insurance_category: '',
+                claim_type: '',
+                incident_date: '',
+                claim_amount: '',
+                description: '',
+                supporting_documents: []
             });
-            
-            if (response.ok) {
-                const result = await response.json();
-                showMessage('Claim submitted successfully! Claim Number: ' + result.claim_number, 'success');
-                setClaimForm({
-                    insurance_type: '',
-                    insurance_category: '',
-                    claim_type: '',
-                    incident_date: '',
-                    claim_amount: '',
-                    description: ''
-                });
-                fetchUserClaims();
-                fetchUserSummary();
-                setActiveTab('claims');
-            } else {
-                const error = await response.json();
-                throw new Error(error.error || 'Failed to submit claim');
-            }
-        } catch (error) {
-            console.error('Error submitting claim:', error);
-            showMessage(error.message || 'Failed to submit claim', 'error');
-        } finally {
-            setLoading(false);
+            fetchUserClaims();
+            fetchUserSummary();
+            setActiveTab('claims');
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to submit claim');
         }
-    };
+    } catch (error) {
+        console.error('Error submitting claim:', error);
+        showMessage(error.message || 'Failed to submit claim', 'error');
+    } finally {
+        setLoading(false);
+    }
+};
+
+// Add document handling functions for viewing existing documents
+const handleDocumentDownload = async (document) => {
+    try {
+        const response = await fetch(`${API_URL}/documents/${document.filename}/download`);
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = document.original_name;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    } catch (error) {
+        showMessage('Failed to download document', 'error');
+    }
+};
+
+const handleDocumentView = (document) => {
+    // Open document in new tab
+    window.open(`${API_URL}/documents/${document.filename}/view`, '_blank');
+};
+
     
     const handleCalculateQuote = async (e) => {
         e.preventDefault();
@@ -163,29 +230,32 @@ const InsuranceClientPage = () => {
             setLoading(false);
         }
     };
-    
     const handleCancelClaim = async (claimId) => {
-        try {
-            const response = await fetch(`${API_URL}/${claimId}/cancel`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            
-            if (response.ok) {
-                showMessage('Claim cancelled successfully', 'success');
-                fetchUserClaims();
-                fetchUserSummary();
-            } else {
-                const error = await response.json();
-                throw new Error(error.error || 'Failed to cancel claim');
-            }
-        } catch (error) {
-            console.error('Error cancelling claim:', error);
-            showMessage(error.message || 'Failed to cancel claim', 'error');
+    try {
+        const response = await fetch(`${API_URL}/${claimId}/cancel`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: user_id,  // Add user_id to request body
+                reason: 'Cancelled by user'  // Optional reason
+            })
+        });
+        
+        if (response.ok) {
+            showMessage('Claim cancelled successfully', 'success');
+            fetchUserClaims();
+            fetchUserSummary();
+        } else {
+            const error = await response.json();
+            throw new Error(error.error || 'Failed to cancel claim');
         }
-    };
+    } catch (error) {
+        console.error('Error cancelling claim:', error);
+        showMessage(error.message || 'Failed to cancel claim', 'error');
+    }
+};
     
     const fetchClaimDetails = async (claimId) => {
         try {
@@ -426,7 +496,6 @@ const showMessage = (text, type = 'success') => {
                                             />
                                         </div>
                                     </div>
-                                    
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
                                             Description
@@ -440,6 +509,18 @@ const showMessage = (text, type = 'success') => {
                                             onChange={(e) => setClaimForm({...claimForm, description: e.target.value})}
                                         />
                                     </div>
+
+                                    {/* Document Upload Component */}
+                                    <DocumentUploadComponent
+                                        documents={claimForm.supporting_documents}
+                                        onDocumentsChange={handleDocumentsChange}
+                                        onError={handleDocumentError}
+                                        disabled={loading}
+                                        maxFiles={5}
+                                        label="Supporting Documents"
+                                        description="Optional - Upload photos, receipts, reports (Max 5 files, 5MB each)"
+                                    />
+
                                     
                                     <div className="flex justify-end">
                                         <button
@@ -458,57 +539,79 @@ const showMessage = (text, type = 'success') => {
                             </div>
                         </div>
                         
-                        {/* Coverage Info Sidebar */}
-                        <div className="space-y-6">
-                            {claimForm.insurance_type && claimForm.insurance_category && (
-                                <div className="bg-white rounded-lg shadow-sm border p-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Coverage Details</h3>
-                                    {(() => {
-                                        const category = insuranceConfig[claimForm.insurance_type]?.categories[claimForm.insurance_category];
-                                        if (!category) return null;
-                                        
-                                        return (
-                                            <div className="space-y-3">
-                                                <div className="flex justify-between">
-                                                    <span className="text-sm text-gray-600">Plan:</span>
-                                                    <span className="font-medium">{category.name}</span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <span className="text-sm text-gray-600">Coverage:</span>
-                                                    <span className="font-medium text-green-600">{category.coverage_percentage}%</span>
-                                                </div>
-                                                <div className="flex justify-between">
-                                                    <span className="text-sm text-gray-600">Max Claim:</span>
-                                                    <span className="font-medium">{formatCurrency(category.max_claim_amount)}</span>
-                                                </div>
-                                                <div className="pt-2 border-t">
-                                                    <p className="text-xs text-gray-500">{category.description}</p>
-                                                </div>
-                                            </div>
-                                        );
-                                    })()}
-                                </div>
-                            )}
-                            
-                            {userSummary && (
-                                <div className="bg-white rounded-lg shadow-sm border p-6">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Claims Summary</h3>
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between">
-                                            <span className="text-sm text-gray-600">Total Claims:</span>
-                                            <span className="font-medium">{userSummary.total_claims || 0}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-sm text-gray-600">Total Claimed:</span>
-                                            <span className="font-medium">{formatCurrency(userSummary.total_claimed || 0)}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <span className="text-sm text-gray-600">Total Approved:</span>
-                                            <span className="font-medium text-green-600">{formatCurrency(userSummary.total_approved || 0)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                       {/* Coverage Info Sidebar */}
+<div className="space-y-6">
+    {claimForm.insurance_type && claimForm.insurance_category && (
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Coverage Details</h3>
+            {(() => {
+                const category = insuranceConfig[claimForm.insurance_type]?.categories[claimForm.insurance_category];
+                if (!category) return null;
+                
+                return (
+                    <div className="space-y-3">
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Plan:</span>
+                            <span className="font-medium">{category.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                            <span className="text-sm text-gray-600">Coverage:</span>
+                            <span className="font-medium text-green-600">{category.coverage_percentage}%</span>
+                        </div>
+                        <div className="pt-2 border-t">
+                            <p className="text-xs text-gray-500">{category.description}</p>
+                        </div>
+                    </div>
+                );
+            })()}
+        </div>
+    )}
+    
+    {/* User Claims Summary */}
+{userSummary && (
+    <div className="bg-white rounded-lg shadow-sm border p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Claims Summary</h3>
+        <div className="space-y-3">
+            <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Total Claims:</span>
+                <span className="font-medium">{userSummary.total_claims}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Total Claimed:</span>
+                <span className="font-medium">{formatCurrency(userSummary.total_claimed)}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Total Approved:</span>
+                <span className="font-medium text-green-600">{formatCurrency(userSummary.total_approved)}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Pending:</span>
+                <span className="font-medium text-yellow-600">{userSummary.pending_claims}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Approved:</span>
+                <span className="font-medium text-green-600">{userSummary.approved_claims}</span>
+            </div>
+            <div className="flex justify-between">
+                <span className="text-sm text-gray-600">Rejected:</span>
+                <span className="font-medium text-red-600">{userSummary.rejected_claims}</span>
+            </div>
+        </div>
+        
+        {/* Insurance Type Breakdown */}
+        {userSummary.by_insurance_type && userSummary.by_insurance_type.length > 0 && (
+            <div className="mt-4 pt-4 border-t">
+                <h4 className="text-sm font-medium text-gray-700 mb-2">By Insurance Type</h4>
+                {userSummary.by_insurance_type.map((typeData, index) => (
+                    <div key={index} className="text-xs text-gray-600 flex justify-between">
+                        <span className="capitalize">{typeData.insurance_type}:</span>
+                        <span>{typeData.total_claims} claims ({formatCurrency(typeData.total_claimed_amount)})</span>
+                    </div>
+                ))}
+            </div>
+        )}
+    </div>
+)}
                         </div>
                     </div>
                 )}
@@ -642,126 +745,23 @@ const showMessage = (text, type = 'success') => {
 
                 {/* Coverage Calculator Tab */}
                 {activeTab === 'calculator' && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div className="bg-white rounded-lg shadow-sm border p-6">
-                            <h2 className="text-lg font-semibold text-gray-900 mb-6">Coverage Calculator</h2>
-                            
-                            <form onSubmit={handleCalculateQuote} className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Insurance Type
-                                    </label>
-                                    <select
-                                        required
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        value={quoteForm.insurance_type}
-                                        onChange={(e) => setQuoteForm({...quoteForm, insurance_type: e.target.value, insurance_category: ''})}
-                                    >
-                                        <option value="">Select insurance type</option>
-                                        {Object.keys(insuranceConfig).map(type => (
-                                            <option key={type} value={type}>
-                                                {insuranceConfig[type]?.name || type}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Coverage Category
-                                    </label>
-                                    <select
-                                        required
-                                        disabled={!quoteForm.insurance_type}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
-                                        value={quoteForm.insurance_category}
-                                        onChange={(e) => setQuoteForm({...quoteForm, insurance_category: e.target.value})}
-                                    >
-                                        <option value="">Select category</option>
-                                        {quoteForm.insurance_type && insuranceConfig[quoteForm.insurance_type]?.categories && 
-                                            Object.keys(insuranceConfig[quoteForm.insurance_type].categories).map(category => (
-                                                <option key={category} value={category}>
-                                                    {insuranceConfig[quoteForm.insurance_type].categories[category].name}
-                                                </option>
-                                            ))
-                                        }
-                                    </select>
-                                </div>
-                                
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Claim Amount (RWF)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        required
-                                        min="0"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder="Enter potential claim amount"
-                                        value={quoteForm.claim_amount}
-                                        onChange={(e) => setQuoteForm({...quoteForm, claim_amount: e.target.value})}
-                                    />
-                                </div>
-                                
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className={`w-full px-4 py-2 rounded-lg font-medium text-white transition-colors ${
-                                        loading 
-                                            ? 'bg-gray-400 cursor-not-allowed' 
-                                            : 'bg-green-600 hover:bg-green-700'
-                                    }`}
-                                >
-                                    {loading ? 'Calculating...' : 'Calculate Coverage'}
-                                </button>
-                            </form>
-                        </div>
-                        
-                        {/* Quote Results */}
-                        {quoteResult && (
-                            <div className="bg-white rounded-lg shadow-sm border p-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-6">Coverage Calculation</h3>
-                                
-                                <div className="space-y-4">
-                                    <div className="bg-blue-50 rounded-lg p-4">
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="text-sm text-gray-600">Claimed Amount:</span>
-                                            <span className="font-semibold text-lg">{formatCurrency(quoteResult.claimed_amount)}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="text-sm text-gray-600">Eligible Amount:</span>
-                                            <span className="font-medium">{formatCurrency(quoteResult.eligible_amount)}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="text-sm text-gray-600">Coverage Percentage:</span>
-                                            <span className="font-medium text-blue-600">{quoteResult.coverage_percentage}%</span>
-                                        </div>
-                                        <hr className="my-3" />
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="text-gray-700 font-medium">You'll Receive:</span>
-                                            <span className="font-bold text-xl text-green-600">{formatCurrency(quoteResult.covered_amount)}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-gray-700">Your Liability:</span>
-                                            <span className="font-medium text-red-600">{formatCurrency(quoteResult.customer_liability)}</span>
-                                        </div>
-                                        
-                                        {quoteResult.exceeded_limit && (
-                                            <div className="mt-3 p-3 bg-yellow-100 rounded-lg">
-                                                <div className="flex items-center space-x-2">
-                                                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
-                                                    <span className="text-sm text-yellow-800">
-                                                        Claim amount exceeds policy maximum. Only eligible amount will be considered.
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                )}
+    <CoverageCalculator
+        insuranceConfig={insuranceConfig}
+        onSubmitClaim={(calculatorData) => {
+            // Pre-fill the claim form with calculator data
+            setClaimForm({
+                ...claimForm,
+                insurance_type: calculatorData.insurance_type,
+                insurance_category: calculatorData.insurance_category,
+                claim_amount: calculatorData.claim_amount
+            });
+            // Switch to submit tab
+            setActiveTab('submit');
+        }}
+        className=""
+        showSubmitButton={true}
+    />
+)}
             </div>
 
             {/* Claim Details Modal */}
@@ -833,7 +833,20 @@ const showMessage = (text, type = 'success') => {
                                     <p className="mt-1 text-gray-700 bg-gray-50 p-3 rounded-lg">{selectedClaim.description}</p>
                                 </div>
                             )}
-                            
+                             {selectedClaim.additional_details?.supporting_documents && (
+                                <div className="mt-4">
+                                    <label className="text-sm font-medium text-gray-500 mb-2 block">Supporting Documents</label>
+                                    <DocumentListComponent
+                                        documents={selectedClaim.additional_details.supporting_documents}
+                                        onDownload={handleDocumentDownload}
+                                        onView={handleDocumentView}
+                                        readOnly={true}
+                                        showInlineImages={true}
+                                        layout="grid"
+                                        apiUrl="http://localhost:5000/api/claims"
+                                    />
+                                </div>
+                            )}
                             <div className="mt-6 flex justify-end space-x-3">
                                 {selectedClaim.status === 'pending' && (
                                     <button

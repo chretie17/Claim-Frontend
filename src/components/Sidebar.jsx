@@ -84,6 +84,12 @@ const Sidebar = () => {
                     roles: ['admin']
                 },
                 {
+                    path: '/admin-claim',
+                    icon: Briefcase,
+                    label: 'Manage Claims',
+                    roles: ['admin']
+                },
+                {
                     path: '/adminforums',
                     icon: MessageSquare,
                     label: 'Manage Forums',
@@ -95,12 +101,7 @@ const Sidebar = () => {
                     label: 'Chat',
                     roles: ['admin']
                 },
-                {
-                    path: '/admin-appointments',
-                    icon: Briefcase,
-                    label: 'Appointments',
-                    roles: ['admin']
-                },
+               
                 {
                     path: '/reports',
                     icon: FileText,
@@ -110,7 +111,7 @@ const Sidebar = () => {
             );
         }
 
-        if (role === 'doctor') {
+        if (role === 'claim-manager') {
             items.push(
                {
                     path: '/chat',
@@ -124,18 +125,7 @@ const Sidebar = () => {
                     label: 'Forum',
                     roles: ['doctor']
                 },
-                {
-                    path: '/doctor-dashboard',
-                    icon: Stethoscope,
-                    label: 'Appointments',
-                    roles: ['doctor']
-                },
-                {
-                    path: '/groups',
-                    icon: Users,
-                    label: 'Groups',
-                    roles: ['doctor']
-                },
+               
             );
         }
 

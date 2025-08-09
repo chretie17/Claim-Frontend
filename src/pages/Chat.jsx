@@ -456,7 +456,7 @@ const getFileIcon = (fileType) => {
 
     if (!currentUserId) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center ">
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center ">
                 <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4">
                     <div className="text-center">
                         <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
@@ -469,12 +469,12 @@ const getFileIcon = (fileType) => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 p-4">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-4">
             <div className="max-w-6xl mx-auto">
                 {/* Connection Status */}
                 <div className={`mb-6 p-4 rounded-xl shadow-sm border-l-4 transition-all duration-300 ${
                     isSocketConnected 
-                        ? 'bg-green-50 border-green-500 text-green-800' 
+                        ? 'bg-blue-50 border-blue-500 text-blue-800' 
                         : 'bg-red-50 border-red-500 text-red-800'
                 }`}>
                     <div className="flex items-center justify-center space-x-2">
@@ -498,10 +498,10 @@ const getFileIcon = (fileType) => {
                         <div
                             key={notification.id}
                             className={`p-4 rounded-xl shadow-lg border-l-4 max-w-sm transform transition-all duration-300 animate-slide-in ${
-                                notification.type === 'success' ? 'bg-green-50 border-green-500' :
+                                notification.type === 'success' ? 'bg-blue-50 border-blue-500' :
                                 notification.type === 'error' ? 'bg-red-50 border-red-500' :
                                 notification.type === 'warning' ? 'bg-yellow-50 border-yellow-500' :
-                                'bg-green-50 border-green-500'
+                                'bg-blue-50 border-blue-500'
                             }`}
                         >
                             <div className="flex justify-between items-start">
@@ -525,16 +525,16 @@ const getFileIcon = (fileType) => {
                     <div className="flex items-center justify-between">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                                Communication MedConnect
+                                Communication
                             </h1>
                             <p className="text-gray-600 flex items-center">
-                                <Circle className="w-2 h-2 text-green-500 mr-2 fill-current" />
+                                <Circle className="w-2 h-2 text-blue-500 mr-2 fill-current" />
                                 Welcome, {currentUser.name} (ID: {currentUserId})
                             </p>
                         </div>
                         <div className="text-right">
                             <div className="text-sm text-gray-500">Status</div>
-                            <div className="font-semibold text-green-600">Online</div>
+                            <div className="font-semibold text-blue-600">Online</div>
                         </div>
                     </div>
                 </div>
@@ -546,8 +546,8 @@ const getFileIcon = (fileType) => {
                             onClick={() => setActiveTab('chat')}
                             className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                                 activeTab === 'chat' 
-                                    ? 'bg-green-600 text-white shadow-lg transform scale-105' 
-                                    : 'text-gray-600 hover:bg-gray-50 hover:text-green-600'
+                                    ? 'bg-blue-600 text-white shadow-lg transform scale-105' 
+                                    : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600'
                             }`}
                         >
                             <MessageCircle className="w-5 h-5" />
@@ -562,8 +562,8 @@ const getFileIcon = (fileType) => {
                             onClick={() => setActiveTab('notifications')}
                             className={`flex-1 flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                                 activeTab === 'notifications' 
-                                    ? 'bg-green-600 text-white shadow-lg transform scale-105' 
-                                    : 'text-gray-600 hover:bg-gray-50 hover:text-green-600'
+                                    ? 'bg-blue-600 text-white shadow-lg transform scale-105' 
+                                    : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600'
                             }`}
                         >
                             <Bell className="w-5 h-5" />
@@ -583,7 +583,7 @@ const getFileIcon = (fileType) => {
                         {/* Users List */}
                         <div className="bg-white rounded-2xl shadow-sm p-6">
                             <div className="flex items-center space-x-2 mb-6">
-                                <Users className="w-5 h-5 text-green-600" />
+                                <Users className="w-5 h-5 text-blue-600" />
                                 <h3 className="font-bold text-gray-800">Medical Staff</h3>
                             </div>
                             <div className="space-y-3">
@@ -593,7 +593,7 @@ const getFileIcon = (fileType) => {
                                         onClick={() => setSelectedUser(user)}
                                         className={`p-4 rounded-xl cursor-pointer transition-all duration-200 hover:shadow-md ${
                                             selectedUser?.id === user.id 
-                                                ? 'bg-green-600 text-white shadow-lg transform scale-105' 
+                                                ? 'bg-blue-600 text-white shadow-lg transform scale-105' 
                                                 : 'bg-gray-50 hover:bg-gray-100'
                                         }`}
                                     >
@@ -608,7 +608,7 @@ const getFileIcon = (fileType) => {
                                                 <div className="text-sm opacity-75">{user.role}</div>
                                             </div>
                                             <div className="flex items-center space-x-1">
-                                                <Circle className="w-2 h-2 text-green-500 fill-current" />
+                                                <Circle className="w-2 h-2 text-blue-500 fill-current" />
                                                 {hasUnreadMessages(user.id) && (
                                                     <span className="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
                                                         !
@@ -633,8 +633,8 @@ const getFileIcon = (fileType) => {
                                 <>
                                     <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
                                         <div className="flex items-center space-x-3">
-                                            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                                                <span className="text-green-600 font-bold">
+                                            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                                <span className="text-blue-600 font-bold">
                                                     {selectedUser.name.charAt(0)}
                                                 </span>
                                             </div>
@@ -647,7 +647,7 @@ const getFileIcon = (fileType) => {
                                         </div>
                                         <button
                                             onClick={sendTestNotification}
-                                            className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                                            className="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                                         >
                                             <TestTube className="w-4 h-4" />
                                             <span>Test Notification</span>
@@ -661,7 +661,7 @@ const getFileIcon = (fileType) => {
                                     >
                                         {isLoading ? (
                                             <div className="flex items-center justify-center h-full">
-                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                                                 <span className="ml-2 text-gray-500">Loading conversation...</span>
                                             </div>
                                         ) : conversation.length === 0 ? (
@@ -687,7 +687,7 @@ const getFileIcon = (fileType) => {
                                                         }}
                                                         className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl cursor-pointer transition-all duration-200 ${
                                                             msg.sender_id === parseInt(currentUserId)
-                                                                ? 'bg-green-600 text-white'
+                                                                ? 'bg-blue-600 text-white'
                                                                 : msg.is_read 
                                                                     ? 'bg-white border border-gray-200 text-gray-800'
                                                                     : 'bg-yellow-50 border border-yellow-200 text-gray-800 shadow-md'
@@ -810,12 +810,12 @@ const getFileIcon = (fileType) => {
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
             placeholder="Type your message..."
-            className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             disabled={!isSocketConnected}
         />
         <button
             onClick={sendMessage}
-            className="px-6 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center space-x-2"
+            className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center space-x-2"
             disabled={!isSocketConnected || (!newMessage.trim() && !selectedFile) || isUploading}
         >
             {isUploading ? (
@@ -849,7 +849,7 @@ const getFileIcon = (fileType) => {
                 {activeTab === 'notifications' && (
                     <div className="bg-white rounded-2xl shadow-sm p-6">
                         <div className="flex items-center space-x-2 mb-6">
-                            <Bell className="w-5 h-5 text-green-600" />
+                            <Bell className="w-5 h-5 text-blue-600" />
                             <h3 className="font-bold text-gray-800">Notifications</h3>
                         </div>
                         <div className="space-y-4">
@@ -870,7 +870,7 @@ const getFileIcon = (fileType) => {
                                         className={`p-4 rounded-xl border-l-4 cursor-pointer transition-all duration-200 hover:shadow-md ${
                                             notification.is_read 
                                                 ? 'bg-gray-50 border-gray-300' 
-                                                : 'bg-green-50 border-green-500 hover:bg-green-100 shadow-sm'
+                                                : 'bg-blue-50 border-blue-500 hover:bg-blue-100 shadow-sm'
                                         }`}
                                     >
                                         <div className="flex justify-between items-start">
@@ -878,7 +878,7 @@ const getFileIcon = (fileType) => {
                                                 <div className="flex items-center space-x-2">
                                                     <h4 className="font-semibold text-gray-800">{notification.title}</h4>
                                                     {!notification.is_read && (
-                                                        <span className="bg-green-500 text-white rounded-full px-2 py-1 text-xs font-bold">
+                                                        <span className="bg-blue-500 text-white rounded-full px-2 py-1 text-xs font-bold">
                                                             NEW
                                                         </span>
                                                     )}
@@ -897,7 +897,7 @@ const getFileIcon = (fileType) => {
                                                         e.stopPropagation();
                                                         markNotificationAsRead(notification.id);
                                                     }}
-                                                    className="flex items-center space-x-1 text-green-600 hover:text-green-700 text-sm font-medium"
+                                                    className="flex items-center space-x-1 text-blue-600 hover:text-blue-700 text-sm font-medium"
                                                 >
                                                     <CheckCircle className="w-4 h-4" />
                                                     <span>Mark as read</span>
@@ -942,7 +942,7 @@ const getFileIcon = (fileType) => {
             <a
                 href={`${API_BASE}/communication/download/${previewImage.url.split('/').pop()}`}
                 download={previewImage.name}
-                className="absolute bottom-2 right-2 bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
+                className="absolute bottom-2 right-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition-colors"
             >
                 📥 Download
             </a>

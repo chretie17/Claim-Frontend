@@ -14,6 +14,7 @@ import Reports from './pages/Report';
 import CommunicationHub from './pages/Chat';
 import Groups from './pages/Group';
 import InsuranceClientPage from './pages/CLientclaim';
+import AdminClaimsPage from './pages/AdminClaim';
 
 const App = () => {
     const [role, setRole] = useState(localStorage.getItem('role'));
@@ -34,10 +35,10 @@ const App = () => {
             {(role === 'client') && <Navbar loggedIn />}
 <div className="flex">
   {/* Sidebar for admin and manager */}
-  {(role === 'admin' || role === 'client-manager') && role !== null && <Sidebar />}
+  {(role === 'admin' || role === 'claim-manager') && role !== null && <Sidebar />}
 
   {/* Main content area with conditional left margin */}
-  <div className={`flex-1 p-4 ${role === 'admin' || role === 'doctor' ? 'ml-64' : ''}`}>
+  <div className={`flex-1 p-4 ${role === 'admin' || role === 'claim-manager' ? 'ml-64' : ''}`}>
     <Routes>
         
                         <Route path="/" element={<Home />} />
@@ -50,6 +51,7 @@ const App = () => {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/manage-users" element={<ManageUsers />} />
                         <Route path="/client-claim" element={<InsuranceClientPage />} />
+                        <Route path="/admin-claim" element={<AdminClaimsPage />} />
                         <Route path="/groups" element={<Groups/>} />
                     </Routes>
                 </div>

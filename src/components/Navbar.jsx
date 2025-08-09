@@ -26,9 +26,6 @@ const Navbar = ({ loggedIn }) => {
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     
-    // Get user data (mock for this example) - simplified for client-only usage
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    
     // Handle scroll effect
     useEffect(() => {
         const handleScroll = () => {
@@ -43,13 +40,21 @@ const Navbar = ({ loggedIn }) => {
             document.removeEventListener('scroll', handleScroll);
         };
     }, [scrolled]);
+
+    // Add padding to body to prevent content from going behind navbar
+    useEffect(() => {
+        // Add padding-top to body to account for fixed navbar
+        document.body.style.paddingTop = mobileMenuOpen ? '200px' : '64px'; // 64px = h-16 (16 * 4px)
+        
+        return () => {
+            // Clean up when component unmounts
+            document.body.style.paddingTop = '';
+        };
+    }, [mobileMenuOpen]);
     
     const handleLogout = () => {
-        // Remove all user-related items
-        const keysToRemove = ['role', 'token', 'userId', 'username', 'email', 'user'];
-        keysToRemove.forEach(key => {
-            console.log(`Removing ${key} from localStorage`);
-        });
+        // Simulate logout - in real app you'd clear actual storage/tokens
+        console.log('Logging out...');
         
         // Redirect to login page
         window.location.href = '/login';
@@ -61,8 +66,9 @@ const Navbar = ({ loggedIn }) => {
 
     // Client navigation items only
     const navItems = loggedIn ? [
-        { to: "/client-claim", label: "CLaims", icon: Home },
-        { to: "/policies", label: "My Policies", icon: Shield }
+        { to: "/client-claim", label: "Claims", icon: Home },
+        { to: "/chat", label: "Chat", icon: FileText },
+        { to: "/forum", label: "Forum", icon: Home },
     ] : [];
     
     return (
