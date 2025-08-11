@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, FileText, Home, LogOut, Menu, X } from 'lucide-react';
+import { Shield, FileText, Home, LogOut, Menu, X, MessageCircle, Users } from 'lucide-react';
 
 // Mock navigation utilities since react-router-dom can't be imported
 const useNavigate = () => {
@@ -53,8 +53,12 @@ const Navbar = ({ loggedIn }) => {
     }, [mobileMenuOpen]);
     
     const handleLogout = () => {
-        // Simulate logout - in real app you'd clear actual storage/tokens
-        console.log('Logging out...');
+        // Remove all user-related items from localStorage
+        const keysToRemove = ['role', 'token', 'userId', 'username', 'email', 'user'];
+        keysToRemove.forEach(key => {
+            localStorage.removeItem(key);
+            console.log(`Removed ${key} from localStorage`);
+        });
         
         // Redirect to login page
         window.location.href = '/login';
@@ -66,9 +70,9 @@ const Navbar = ({ loggedIn }) => {
 
     // Client navigation items only
     const navItems = loggedIn ? [
-        { to: "/client-claim", label: "Claims", icon: Home },
-        { to: "/chat", label: "Chat", icon: FileText },
-        { to: "/forum", label: "Forum", icon: Home },
+        { to: "/client-claim", label: "Claims", icon: FileText },
+        { to: "/chat", label: "Chat", icon: MessageCircle },
+        { to: "/forum", label: "Forum", icon: Users },
     ] : [];
     
     return (

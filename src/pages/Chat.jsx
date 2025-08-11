@@ -584,7 +584,7 @@ const getFileIcon = (fileType) => {
                         <div className="bg-white rounded-2xl shadow-sm p-6">
                             <div className="flex items-center space-x-2 mb-6">
                                 <Users className="w-5 h-5 text-blue-600" />
-                                <h3 className="font-bold text-gray-800">Medical Staff</h3>
+                                <h3 className="font-bold text-gray-800">Users</h3>
                             </div>
                             <div className="space-y-3">
                                 {users.map(user => (
