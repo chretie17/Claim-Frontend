@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
 import ManageUsers from './pages/ManageUsers';
-import CommunityPost from './pages/CommunityPost';
+import CommunityPost from './pages/Forum/CommunityPost';
 import AdminContentManagement from './pages/AdminPosts';
 import Reports from './pages/Report';
 import CommunicationHub from './pages/Chat';
