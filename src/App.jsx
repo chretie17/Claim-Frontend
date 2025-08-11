@@ -13,7 +13,7 @@ import AdminContentManagement from './pages/AdminPosts';
 import Reports from './pages/Report';
 import CommunicationHub from './pages/Chat';
 import Groups from './pages/Group';
-import InsuranceClientPage from './pages/CLientclaim';
+import InsuranceClientPage from './pages/clientclaim/CLientclaim';
 import AdminClaimsPage from './pages/AdminClaim';
 
 const App = () => {
