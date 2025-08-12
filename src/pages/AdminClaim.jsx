@@ -19,9 +19,11 @@ import {
   Users,
   DollarSign,
   AlertCircle,
+  Shield,
   Brain,
  Loader 
 } from 'lucide-react';
+import IdentityVerificationComponent from './IdentityVerification'; // Adjust path as needed
 
 import AIAnalysisComponent from './AIAnalysis'; // Adjust path as needed
 
@@ -37,6 +39,7 @@ const AdminClaimsPage = () => {
   const [error, setError] = useState(null);
   const [showAIAnalysis, setShowAIAnalysis] = useState(false);
 const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
+const [showIdentityVerification, setShowIdentityVerification] = useState(false);
   // Filter states
   const [filters, setFilters] = useState({
     status: '',
@@ -652,28 +655,39 @@ checked={selectedClaims.length === getFilteredClaims().length && getFilteredClai
                         </div>
                       </td>
                      
-                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-  <div className="flex items-center space-x-2">
-    <button 
-      onClick={() => handleAIAnalysis(claim)}
-      className="text-purple-600 hover:text-purple-900"
-      title="AI Analysis"
-    >
-      <Brain className="h-4 w-4" />
-    </button>
-    <button 
-      onClick={() => {
-        setSelectedClaim(claim);
-        setShowProcessModal(true);
-      }}
-      className="text-green-600 hover:text-green-900"
-      title="Process Claim"
-    >
-      <CheckCircle className="h-4 w-4" />
-    </button>
+                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex items-center space-x-2">
+                                          <button 
+                        onClick={() => {
+                          setSelectedClaim(claim);
+                          setShowIdentityVerification(true);
+                        }}
+                        className="text-blue-600 hover:text-blue-900"
+                        title="Verify Identity"
+                      >
+                        <Shield className="h-4 w-4" />
+                      </button>
+                      <button 
+                        onClick={() => handleAIAnalysis(claim)}
+                        className="text-purple-600 hover:text-purple-900"
+                        title="AI Analysis"
+                      >
+                        <Brain className="h-4 w-4" />
+                      </button>
+                        <button 
+                          onClick={() => {
+                            setSelectedClaim(claim);
+                            setShowProcessModal(true);
+                          }}
+                          className="text-green-600 hover:text-green-900"
+                          title="Process Claim"
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                        </button>
 
-  </div>
-</td>
+                      </div>
+                    </td>
+                    
                     </tr>
                   ))
                 )}
@@ -792,9 +806,24 @@ checked={selectedClaims.length === getFilteredClaims().length && getFilteredClai
     }}
   />
 )}
+{showIdentityVerification && selectedClaim && (
+        <IdentityVerificationComponent
+          selectedClaim={selectedClaim}
+          onClose={() => {
+            setShowIdentityVerification(false);
+            setSelectedClaim(null);
+          }}
+          onVerificationComplete={(result) => {
+            console.log('Identity verification completed:', result);
+            loadClaims();
+            alert(`Identity ${result.status} successfully`);
+          }}
+        />
+      )}
     </div>
   );
 };
+
 
 // Process Claim Modal Component
 const ProcessClaimModal = ({ claim, onClose, onProcess }) => {
