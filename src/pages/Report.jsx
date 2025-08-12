@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FileText, Download, Calendar, Filter } from 'lucide-react';
+import ProfessionalPDFExporter from './ReportPdf'; 
 
 const API_URL = 'http://localhost:5000/api/reports';
 
@@ -535,21 +536,22 @@ const InsuranceReportsDashboard = () => {
               <p className="text-slate-300 mt-1">Data Analytics Dashboard</p>
             </div>
             <div className="flex space-x-3">
-              <button
-                onClick={handlePrintPDF}
-                className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                <FileText className="w-4 h-4 mr-2" />
-                Print PDF
-              </button>
-              <button
-                onClick={handleExportCSV}
-                className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Export CSV
-              </button>
-            </div>
+          <ProfessionalPDFExporter
+            reportData={reportData}
+            activeReport={activeReport}
+            reportTypes={reportTypes}
+            filters={filters}
+            insuranceTypes={insuranceTypes}
+            statusOptions={statusOptions}
+          />
+          <button
+            onClick={handleExportCSV}
+            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export CSV
+          </button>
+        </div>
           </div>
         </div>
       </div>
