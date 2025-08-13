@@ -113,6 +113,12 @@ const Sidebar = () => {
 
         if (role === 'claim-manager') {
             items.push(
+                {
+                    path: '/admin-claim',
+                    icon: Briefcase,
+                    label: 'Manage Claims',
+                    roles: ['admin']
+                },
                {
                     path: '/chat',
                     icon: MessageCircle,

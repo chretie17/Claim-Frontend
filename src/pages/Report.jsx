@@ -124,7 +124,7 @@ const InsuranceReportsDashboard = () => {
     return (
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-blue-300">
-          <thead className="bg-slate-800 text-white">
+          <thead className="bg-blue-900 text-white">
             <tr>
               <th className="px-4 py-3 text-left text-sm font-semibold">Metric</th>
               <th className="px-4 py-3 text-left text-sm font-semibold">Value</th>
@@ -157,12 +157,12 @@ const InsuranceReportsDashboard = () => {
       <div className="space-y-6">
         {reportData.data.map((typeData, index) => (
           <div key={index}>
-            <h3 className="text-lg font-semibold text-slate-800 mb-3 capitalize">
+            <h3 className="text-lg font-semibold text-blue-900 mb-3 capitalize">
               {typeData.insurance_type} Insurance
             </h3>
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white border border-blue-300">
-                <thead className="bg-slate-800 text-white">
+                <thead className="bg-blue-900 text-white">
                   <tr>
                     <th className="px-4 py-3 text-left text-sm font-semibold">Category</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold">Total Claims</th>
@@ -205,7 +205,7 @@ const InsuranceReportsDashboard = () => {
       <div className="space-y-6">
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-blue-300">
-            <thead className="bg-slate-800 text-white">
+            <thead className="bg-blue-900 text-white">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Risk Level</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Insurance Type</th>
@@ -236,9 +236,9 @@ const InsuranceReportsDashboard = () => {
 
         {reportData.score_distribution && (
           <div className="overflow-x-auto">
-            <h3 className="text-lg font-semibold text-slate-800 mb-3">Fraud Score Distribution</h3>
+            <h3 className="text-lg font-semibold text-blue-900 mb-3">Fraud Score Distribution</h3>
             <table className="min-w-full bg-white border border-blue-300">
-              <thead className="bg-slate-800 text-white">
+              <thead className="bg-blue-900 text-white">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Score Range</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Count</th>
@@ -274,7 +274,7 @@ const InsuranceReportsDashboard = () => {
       <div className="space-y-6">
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-blue-300">
-            <thead className="bg-slate-800 text-white">
+            <thead className="bg-blue-900 text-white">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Insurance Type</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Claims</th>
@@ -303,9 +303,9 @@ const InsuranceReportsDashboard = () => {
 
         {reportData.monthly_breakdown && (
           <div className="overflow-x-auto">
-            <h3 className="text-lg font-semibold text-slate-800 mb-3">Monthly Breakdown</h3>
+            <h3 className="text-lg font-semibold text-blue-900 mb-3">Monthly Breakdown</h3>
             <table className="min-w-full bg-white border border-blue-300">
-              <thead className="bg-slate-800 text-white">
+              <thead className="bg-blue-900 text-white">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Period</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Claims</th>
@@ -343,9 +343,9 @@ const InsuranceReportsDashboard = () => {
     return (
       <div className="space-y-6">
         <div className="overflow-x-auto">
-          <h3 className="text-lg font-semibold text-slate-800 mb-3">Processing Time Analysis</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">Processing Time Analysis</h3>
           <table className="min-w-full bg-white border border-blue-300">
-            <thead className="bg-slate-800 text-white">
+            <thead className="bg-blue-900 text-white">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Priority</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
@@ -371,9 +371,9 @@ const InsuranceReportsDashboard = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <h3 className="text-lg font-semibold text-slate-800 mb-3">Admin Workload</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">Admin Workload</h3>
           <table className="min-w-full bg-white border border-blue-300">
-            <thead className="bg-slate-800 text-white">
+            <thead className="bg-blue-900 text-white">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Admin</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Assigned</th>
@@ -412,9 +412,9 @@ const InsuranceReportsDashboard = () => {
     return (
       <div className="space-y-6">
         <div className="overflow-x-auto">
-          <h3 className="text-lg font-semibold text-slate-800 mb-3">Top Customers</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">Top Customers</h3>
           <table className="min-w-full bg-white border border-blue-300">
-            <thead className="bg-slate-800 text-white">
+            <thead className="bg-blue-900 text-white">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Customer</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Email</th>
@@ -446,9 +446,9 @@ const InsuranceReportsDashboard = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <h3 className="text-lg font-semibold text-slate-800 mb-3">Customer Frequency Analysis</h3>
+          <h3 className="text-lg font-semibold text-blue-900 mb-3">Customer Frequency Analysis</h3>
           <table className="min-w-full bg-white border border-blue-300">
-            <thead className="bg-slate-800 text-white">
+            <thead className="bg-blue-900 text-white">
               <tr>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Frequency Group</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Customer Count</th>
@@ -479,8 +479,8 @@ const InsuranceReportsDashboard = () => {
   const renderReportContent = () => {
     if (loading) {
       return (
-        <div className="flex items-center justify-center h-32 text-slate-600">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600 mr-3"></div>
+        <div className="flex items-center justify-center h-32 text-blue-600">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
           Loading...
         </div>
       );
@@ -492,7 +492,7 @@ const InsuranceReportsDashboard = () => {
           <p>Error: {error}</p>
           <button
             onClick={() => fetchReport(activeReport)}
-            className="mt-4 px-4 py-2 bg-slate-800 text-white rounded hover:bg-slate-700"
+            className="mt-4 px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-700"
           >
             Retry
           </button>
@@ -528,12 +528,12 @@ const InsuranceReportsDashboard = () => {
       `}</style>
 
       {/* Header */}
-      <div className="bg-slate-800 text-white shadow-lg no-print">
+      <div className="bg-blue-900 text-white shadow-lg no-print">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold">Insurance Claims Reports</h1>
-              <p className="text-slate-300 mt-1">Data Analytics Dashboard</p>
+              <p className="text-blue-300 mt-1">Data Analytics Dashboard</p>
             </div>
             <div className="flex space-x-3">
           <ProfessionalPDFExporter
@@ -562,38 +562,38 @@ const InsuranceReportsDashboard = () => {
           <div className="lg:w-1/4 no-print">
             {/* Filters */}
             <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-              <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center">
+              <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center">
                 <Filter className="w-5 h-5 mr-2" />
                 Filters
               </h3>
               
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Date From</label>
+                  <label className="block text-sm font-medium text-blue-700 mb-2">Date From</label>
                   <input
                     type="date"
                     value={filters.date_from}
                     onChange={(e) => handleFilterChange('date_from', e.target.value)}
-                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Date To</label>
+                  <label className="block text-sm font-medium text-blue-700 mb-2">Date To</label>
                   <input
                     type="date"
                     value={filters.date_to}
                     onChange={(e) => handleFilterChange('date_to', e.target.value)}
-                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Insurance Type</label>
+                  <label className="block text-sm font-medium text-blue-700 mb-2">Insurance Type</label>
                   <select
                     value={filters.insurance_type}
                     onChange={(e) => handleFilterChange('insurance_type', e.target.value)}
-                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     {insuranceTypes.map(type => (
                       <option key={type.value} value={type.value}>{type.label}</option>
@@ -602,11 +602,11 @@ const InsuranceReportsDashboard = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">Status</label>
+                  <label className="block text-sm font-medium text-blue-700 mb-2">Status</label>
                   <select
                     value={filters.status}
                     onChange={(e) => handleFilterChange('status', e.target.value)}
-                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-slate-500"
+                    className="w-full px-3 py-2 border border-blue-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     {statusOptions.map(status => (
                       <option key={status.value} value={status.value}>{status.label}</option>
@@ -616,7 +616,7 @@ const InsuranceReportsDashboard = () => {
                 
                 <button
                   onClick={applyFilters}
-                  className="w-full bg-slate-800 text-white px-4 py-2 rounded-md hover:bg-slate-700 transition-colors font-medium"
+                  className="w-full bg-blue-900 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
                 >
                   Apply Filters
                 </button>
@@ -625,7 +625,7 @@ const InsuranceReportsDashboard = () => {
 
             {/* Report Navigation */}
             <div className="bg-white rounded-lg shadow-md p-4">
-              <h3 className="text-lg font-semibold text-slate-800 mb-4">Reports</h3>
+              <h3 className="text-lg font-semibold text-blue-900 mb-4">Reports</h3>
               <nav className="space-y-2">
                 {reportTypes.map((report) => (
                   <button
@@ -633,8 +633,8 @@ const InsuranceReportsDashboard = () => {
                     onClick={() => setActiveReport(report.id)}
                     className={`w-full text-left px-4 py-3 rounded-md font-medium transition-colors ${
                       activeReport === report.id
-                        ? 'bg-slate-800 text-white'
-                        : 'text-slate-600 hover:bg-slate-100'
+                        ? 'bg-blue-900 text-white'
+                        : 'text-blue-600 hover:bg-blue-100'
                     }`}
                   >
                     {report.name}
@@ -649,11 +649,11 @@ const InsuranceReportsDashboard = () => {
             <div className="printable">
               {/* Report Header for Print */}
               <div className="hidden print:block mb-6">
-                <h1 className="text-2xl font-bold text-slate-800 mb-2">
+                <h1 className="text-2xl font-bold text-blue-900 mb-2">
                   {reportTypes.find(r => r.id === activeReport)?.name} Report
                 </h1>
                 {reportData && (
-                  <div className="text-sm text-slate-600">
+                  <div className="text-sm text-blue-600">
                     <p>Generated on: {formatDate(reportData.generated_at)}</p>
                     {reportData.date_range && reportData.date_range.from && reportData.date_range.to && (
                       <p>Period: {formatDate(reportData.date_range.from)} - {formatDate(reportData.date_range.to)}</p>
@@ -672,11 +672,11 @@ const InsuranceReportsDashboard = () => {
               <div className="bg-white rounded-lg shadow-md p-6 mb-6 no-print">
                 <div className="flex justify-between items-center">
                   <div>
-                    <h2 className="text-2xl font-bold text-slate-800">
+                    <h2 className="text-2xl font-bold text-blue-900">
                       {reportTypes.find(r => r.id === activeReport)?.name} Report
                     </h2>
                     {reportData && (
-                      <p className="text-slate-600 mt-2">
+                      <p className="text-blue-600 mt-2">
                         Generated on {formatDate(reportData.generated_at)}
                         {reportData.date_range && reportData.date_range.from && reportData.date_range.to && (
                           <> • {formatDate(reportData.date_range.from)} - {formatDate(reportData.date_range.to)}</>
@@ -687,7 +687,7 @@ const InsuranceReportsDashboard = () => {
                   <button
                     onClick={() => fetchReport(activeReport)}
                     disabled={loading}
-                    className="px-4 py-2 bg-slate-100 text-slate-700 rounded-md hover:bg-slate-500 transition-colors disabled:opacity-50"
+                    className="px-4 py-2 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-500 transition-colors disabled:opacity-50"
                   >
                     Refresh
                   </button>
