@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import API_URL from '../api';
 import axios from 'axios';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
     const [usernameOrEmail, setUsernameOrEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+
     const [showMessage, setShowMessage] = useState({ visible: false, text: '', type: 'success' });
     const navigate = useNavigate();
 
@@ -221,13 +224,20 @@ const Login = () => {
                                                 </div>
                                                 <input
                                                     id="password"
-                                                    type="password"
+                                                    type={showPassword ? "text" : "password"}
                                                     required
-                                                    className="w-full pl-12 pr-4 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
+                                                    className="w-full pl-12 pr-12 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
                                                     placeholder="Enter your password"
                                                     value={password}
                                                     onChange={(e) => setPassword(e.target.value)}
                                                 />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-300 hover:text-white transition-colors"
+                                                >
+                                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -244,9 +254,7 @@ const Login = () => {
                                                 Remember me
                                             </label>
                                         </div>
-                                        <Link to="/forgot-password" className="text-sm text-blue-300 hover:text-blue-100 transition-colors">
-                                            Forgot password?
-                                        </Link>
+                                        
                                     </div>
 
                                     <button
