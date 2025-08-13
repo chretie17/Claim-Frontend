@@ -12,7 +12,6 @@ import CommunityPost from './pages/Forum/CommunityPost';
 import AdminContentManagement from './pages/AdminPosts';
 import Reports from './pages/Report';
 import CommunicationHub from './pages/Chat';
-import Groups from './pages/Group';
 import InsuranceClientPage from './pages/clientclaim/CLientclaim';
 import AdminClaimsPage from './pages/AdminClaim';
 
@@ -52,7 +51,6 @@ const App = () => {
                         <Route path="/manage-users" element={<ManageUsers />} />
                         <Route path="/client-claim" element={<InsuranceClientPage />} />
                         <Route path="/admin-claim" element={<AdminClaimsPage />} />
-                        <Route path="/groups" element={<Groups/>} />
                     </Routes>
                 </div>
             </div>

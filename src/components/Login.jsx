@@ -33,7 +33,7 @@ const Login = () => {
             displayMessage(welcomeMessage, 'success');
             
             setTimeout(() => {
-                if (response.data.role === 'admin' || response.data.role === 'doctor') {
+                if (response.data.role === 'admin' || response.data.role === 'claim-manager') {
                     navigate('/dashboard');
                 } else {
                     navigate('/');

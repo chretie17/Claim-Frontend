@@ -71,7 +71,7 @@ const Sidebar = () => {
                 path: '/dashboard',
                 icon: Home,
                 label: 'Dashboard',
-                roles: ['admin', 'employer', 'doctor']
+                roles: ['admin','claim-manager', 'client']
             }
         ];
 
@@ -117,13 +117,13 @@ const Sidebar = () => {
                     path: '/chat',
                     icon: MessageCircle,
                     label: 'Chat',
-                    roles: ['doctor']
+                    roles: ['claim-manager']
                 },
                 {
                     path: '/forum',
                     icon: MessageSquare,
                     label: 'Forum',
-                    roles: ['doctor']
+                    roles: ['claim-manager']
                 },
                
             );
