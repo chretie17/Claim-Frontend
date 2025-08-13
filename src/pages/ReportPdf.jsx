@@ -391,43 +391,71 @@ const createStyledTable = (headers, data, options = {}) => {
     ];
   };
 
-  const generateClaimsByTypeContent = () => {
+ const generateClaimsByTypeContent = () => {
     if (!reportData?.data) return [];
 
     const content = [
-      { text: '📈 Claims Analysis by Insurance Type', style: 'sectionHeader', pageBreak: 'before', margin: [0, 0, 0, 20] }
+      { text: '📈 Claims Analysis by Insurance Type', style: 'sectionHeader', margin: [0, 0, 0, 20] }
     ];
 
     reportData.data.forEach((typeData, index) => {
       const typeColor = ['#159FDB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'][index % 5];
       
+      // Add insurance type header
+      content.push({
+        text: `${typeData.insurance_type.charAt(0).toUpperCase() + typeData.insurance_type.slice(1)} Insurance`, 
+        style: 'subsectionHeader', 
+        color: typeColor,
+        margin: [0, 15, 0, 10],
+        pageBreak: index > 0 ? 'before' : undefined // Add page break for each insurance type except first
+      });
+
+      // Split the table into two parts to fit better on page
+      
+      // First table: Basic claim counts
       content.push(
-        { 
-          text: `${typeData.insurance_type.charAt(0).toUpperCase() + typeData.insurance_type.slice(1)} Insurance`, 
-          style: 'subsectionHeader', 
-          color: typeColor,
-          margin: [0, 20, 0, 15] 
-        },
+        { text: 'Claim Counts & Status', style: 'tableSubheader', margin: [0, 5, 0, 8] },
         createStyledTable(
-          ['Category', 'Total', 'Pending', 'Approved', 'Rejected', 'Total Amount', 'Avg Amount', 'Payout', 'Approval Rate'],
+          ['Category', 'Total', 'Pending', 'Approved', 'Rejected', 'Approval Rate'],
           typeData.categories.map(category => [
             category.category.charAt(0).toUpperCase() + category.category.slice(1),
             category.total_claims?.toString() || '0',
             category.pending_claims?.toString() || '0',
             category.approved_claims?.toString() || '0',
             category.rejected_claims?.toString() || '0',
-            formatCurrency(category.total_claimed),
-            formatCurrency(category.average_amount),
-            formatCurrency(category.total_payout),
             `${category.approval_rate || 0}%`
           ]),
           { 
             headerColor: typeColor, 
-            fontSize: 8,
-            widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*']
+            fontSize: 9,
+            widths: ['25%', '15%', '15%', '15%', '15%', '15%']
           }
         )
       );
+
+      // Second table: Financial amounts
+      content.push(
+        { text: 'Financial Summary', style: 'tableSubheader', margin: [0, 15, 0, 8] },
+        createStyledTable(
+          ['Category', 'Total Claimed', 'Average Amount', 'Total Payout'],
+          typeData.categories.map(category => [
+            category.category.charAt(0).toUpperCase() + category.category.slice(1),
+            formatCurrency(category.total_claimed),
+            formatCurrency(category.average_amount),
+            formatCurrency(category.total_payout)
+          ]),
+          { 
+            headerColor: typeColor, 
+            fontSize: 9,
+            widths: ['25%', '25%', '25%', '25%']
+          }
+        )
+      );
+
+      // Add spacing between insurance types
+      if (index < reportData.data.length - 1) {
+        content.push({ text: '', margin: [0, 0, 0, 20] });
+      }
     });
 
     return content;
