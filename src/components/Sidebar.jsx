@@ -107,6 +107,12 @@ const Sidebar = () => {
                     icon: FileText,
                     label: 'Reports',
                     roles: ['admin']
+                },
+                  {
+                    path: '/user-report',
+                    icon: FileText,
+                    label: 'User Reports',
+                    roles: ['admin']
                 }
             );
         }

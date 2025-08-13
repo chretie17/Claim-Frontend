@@ -14,6 +14,7 @@ import Reports from './pages/Report';
 import CommunicationHub from './pages/Chat';
 import InsuranceClientPage from './pages/clientclaim/CLientclaim';
 import AdminClaimsPage from './pages/AdminClaim';
+import UserReportsPage from './pages/UserReport';
 
 const App = () => {
     const [role, setRole] = useState(localStorage.getItem('role'));
@@ -51,6 +52,7 @@ const App = () => {
                         <Route path="/manage-users" element={<ManageUsers />} />
                         <Route path="/client-claim" element={<InsuranceClientPage />} />
                         <Route path="/admin-claim" element={<AdminClaimsPage />} />
+                        <Route path="/user-report" element={<UserReportsPage />} />
                     </Routes>
                 </div>
             </div>

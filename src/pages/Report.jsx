@@ -17,12 +17,12 @@ const InsuranceReportsDashboard = () => {
   });
 
   const reportTypes = [
-    { id: 'overview', name: 'Overview' },
-    { id: 'claims-by-type', name: 'Claims by Type' },
-    { id: 'fraud-analysis', name: 'Fraud Analysis' },
-    { id: 'financial', name: 'Financial Analysis' },
-    { id: 'performance', name: 'Performance' },
-    { id: 'customer-analysis', name: 'Customer Analysis' }
+    { id: 'overview', name: 'Overview Report' },
+    { id: 'claims-by-type', name: 'Claims by Type Report' },
+    { id: 'fraud-analysis', name: 'Fraud Analysis Report' },
+    { id: 'financial', name: 'Financial Analysis Report' },
+    { id: 'performance', name: 'Performance Report' },
+    { id: 'customer-analysis', name: 'Customer Analysis Report' }
   ];
 
   const insuranceTypes = [
