@@ -20,7 +20,7 @@ const InsuranceReportsDashboard = () => {
     { id: 'overview', name: 'Overview' },
     { id: 'claims-by-type', name: 'Claims by Type' },
     { id: 'fraud-analysis', name: 'Fraud Analysis' },
-    { id: 'financial', name: 'Financial' },
+    { id: 'financial', name: 'Financial Analysis' },
     { id: 'performance', name: 'Performance' },
     { id: 'customer-analysis', name: 'Customer Analysis' }
   ];
