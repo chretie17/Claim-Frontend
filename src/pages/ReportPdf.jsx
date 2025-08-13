@@ -117,90 +117,202 @@ const getLogoBase64 = async () => {
     return 'data:image/svg+xml;base64,' + btoa(svgContent);
   };
 
- const createHeader = async (reportTitle) => {
+// Replace your existing createHeader function with this simplified version:
+
+// REPLACE the entire createHeader section (remove both versions and use this one):
+const createHeader = async (reportTitle) => {
   let logoBase64;
   try {
     logoBase64 = await getLogoBase64();
   } catch (error) {
-    console.log('All logo loading methods failed, using text-only header:', error.message);
+    console.log('Logo loading failed, using text-only header:', error.message);
     logoBase64 = null;
   }
   
   const headerColumns = [];
   
-  // Add logo if available (smaller size)
-  if (logoBase64) {
-    headerColumns.push({
-      width: 60,
-      image: logoBase64,
-      width: 50,
-      height: 20,
-      margin: [0, 2, 0, 0]
-    });
-  }
+// Add logo if available (left side)
+if (logoBase64) {
+  headerColumns.push({
+    width: 80, // Fixed width to maintain balance
+    image: logoBase64,
+    fit: [80, 40], // Auto-fit logo within these max dimensions
+    margin: [0, 8, 0, 0]
+  });
+} else {
+  // Empty space for balance when no logo
+  headerColumns.push({
+    width: 80, // Same width as logo column
+    text: ''
+  });
+}
   
-  // Company info column (more compact)
+  // Company name in center (big)
   headerColumns.push({
     width: '*',
     stack: [
       {
         text: 'PRIME INSURANCE',
-        style: 'companyHeaderCompact',
-        color: '#159FDB'
-      },
-      {
-        text: 'Professional Insurance Claims Analysis',
-        style: 'companySubtitleCompact',
-        color: '#6B7280'
+        style: 'bigCenterHeader',
+        color: '#159FDB',
+        alignment: 'center'
       }
     ]
   });
   
-  // Date and confidential column (more compact)
+  // Empty right column for balance
   headerColumns.push({
-    width: 'auto',
-    stack: [
-      {
-        text: getCurrentDateTime(),
-        style: 'headerDateCompact',
-        alignment: 'right'
-      },
-      {
-        text: 'Confidential Report',
-        style: 'confidentialCompact',
-        alignment: 'right',
-        color: '#DC2626'
-      }
-    ]
+    width: 60,
+    text: ''
   });
   
   return [
-    // Compact Company Header with Logo
+    // Header with Logo and centered company name
     {
       columns: headerColumns,
-      margin: [0, 0, 0, 10] // Reduced margin
+      margin: [0, 0, 0, 15]
     },
     
-    // Thinner Decorative Line
+    // Report Title
+    {
+      text: reportTitle,
+      style: 'simpleReportTitle',
+      alignment: 'center',
+      margin: [0, 5, 0, 20]
+    }
+  ];
+};
+// Create a new function for bottom metadata (to be called after tables):
+// Replace your existing createBottomMetadata function with this:
+const createBottomMetadata = () => {
+  const metadata = [];
+  
+  // Date Range
+  if (reportData?.date_range?.from && reportData?.date_range?.to) {
+    metadata.push(`📅 Period: ${formatDate(reportData.date_range.from)} - ${formatDate(reportData.date_range.to)}`);
+  }
+  
+  // Filters
+  if (filters.insurance_type !== 'all') {
+    const insuranceLabel = insuranceTypes.find(t => t.value === filters.insurance_type)?.label;
+    metadata.push(`🏛️ Insurance Type: ${insuranceLabel}`);
+  }
+  
+  if (filters.status !== 'all') {
+    const statusLabel = statusOptions.find(s => s.value === filters.status)?.label;
+    metadata.push(`📊 Status Filter: ${statusLabel}`);
+  }
+
+  return [
+    // Add a page break before metadata to ensure it's on a separate section
+    { text: '', pageBreak: 'before' },
+    
+    // Divider line
     {
       canvas: [
         {
           type: 'line',
           x1: 0, y1: 0,
           x2: 515, y2: 0,
-          lineWidth: 2, // Thinner line
-          lineColor: '#159FDB'
+          lineWidth: 2,
+          lineColor: '#E5E7EB'
         }
       ],
-      margin: [0, 0, 0, 10] // Reduced margin
+      margin: [0, 20, 0, 20]
     },
     
-    // Compact Report Title Section
+    // Report Configuration Section (only if there are filters)
+    ...(metadata.length > 0 ? [
+      { 
+        text: 'Report Configuration', 
+        style: 'bottomSectionHeader', 
+        margin: [0, 0, 0, 15] 
+      },
+      {
+        table: {
+          widths: ['*'],
+          body: [[{
+            ul: metadata,
+            style: 'bottomMetadata',
+            fillColor: '#F8F9FA',
+            margin: [15, 15, 15, 15]
+          }]]
+        },
+        layout: {
+          hLineWidth: () => 1,
+          vLineWidth: () => 1,
+          hLineColor: () => '#E5E7EB',
+          vLineColor: () => '#E5E7EB'
+        },
+        margin: [0, 0, 0, 20]
+      }
+    ] : []),
+    
+    // Generation Information Section
+    { 
+      text: 'Report Generation Details', 
+      style: 'bottomSectionHeader', 
+      margin: [0, 10, 0, 15] 
+    },
     {
-      text: reportTitle,
-      style: 'reportTitleCompact',
-      alignment: 'center',
-      margin: [0, 5, 0, 15] // Much smaller margins
+      table: {
+        widths: ['*'],
+        body: [[{
+          stack: [
+            { 
+              text: 'Report Generated:', 
+              style: 'bottomMetadataHeader',
+              margin: [0, 0, 0, 5]
+            },
+            { 
+              text: getCurrentDateTime(), 
+              style: 'bottomMetadata',
+              margin: [0, 0, 0, 10]
+            },
+            { 
+              text: 'Generated by:', 
+              style: 'bottomMetadataHeader',
+              margin: [0, 0, 0, 5]
+            },
+            { 
+              text: 'PRIME Insurance System Administrator', 
+              style: 'bottomMetadata',
+              margin: [0, 0, 0, 10]
+            },
+            { 
+              text: 'System Version:', 
+              style: 'bottomMetadataHeader',
+              margin: [0, 0, 0, 5]
+            },
+            { 
+              text: 'PRIME Insurance Management System v2.1.0', 
+              style: 'bottomMetadata',
+              margin: [0, 0, 0, 15]
+            },
+            { 
+              text: '© 2024 PRIME Insurance. All rights reserved.', 
+              style: 'copyrightText',
+              alignment: 'center',
+              margin: [0, 10, 0, 0]
+            },
+            { 
+              text: 'This report contains confidential and proprietary information.', 
+              style: 'confidentialText',
+              alignment: 'center',
+              margin: [0, 5, 0, 0]
+            }
+          ],
+          fillColor: '#FAFAFA',
+          margin: [20, 20, 20, 20]
+        }]]
+      },
+      layout: {
+        hLineWidth: () => 1,
+        vLineWidth: () => 1,
+        hLineColor: () => '#D1D5DB',
+        vLineColor: () => '#D1D5DB'
+      },
+      margin: [0, 0, 0, 0]
     }
   ];
 };
@@ -290,113 +402,36 @@ const createStyledTable = (headers, data, options = {}) => {
   };
 };
 
-  const generateOverviewContent = () => {
-    if (!reportData?.summary) return [];
+ const generateOverviewContent = () => {
+  if (!reportData?.summary) return [];
 
-    const { summary } = reportData;
-    
-    // Key metrics cards
-    const keyMetrics = [
-      {
-        columns: [
-          {
-            width: '25%',
-            table: {
-              body: [[{
-                text: [
-                  { text: summary.total_claims?.toString() || '0', style: 'metricNumber' },
-                  { text: '\nTotal Claims', style: 'metricLabel' }
-                ],
-                alignment: 'center',
-                fillColor: '#EFF6FF',
-                border: [false, false, false, false]
-              }]]
-            },
-            layout: 'noBorders'
-          },
-          {
-            width: '25%',
-            table: {
-              body: [[{
-                text: [
-                  { text: `${summary.approval_rate || 0}%`, style: 'metricNumber' },
-                  { text: '\nApproval Rate', style: 'metricLabel' }
-                ],
-                alignment: 'center',
-                fillColor: '#F0FDF4',
-                border: [false, false, false, false]
-              }]]
-            },
-            layout: 'noBorders'
-          },
-          {
-            width: '25%',
-            table: {
-              body: [[{
-                text: [
-                  { text: formatCurrency(summary.total_payout), style: 'metricNumber', fontSize: 12 },
-                  { text: '\nTotal Payout', style: 'metricLabel' }
-                ],
-                alignment: 'center',
-                fillColor: '#FEF3C7',
-                border: [false, false, false, false]
-              }]]
-            },
-            layout: 'noBorders'
-          },
-          {
-            width: '25%',
-            table: {
-              body: [[{
-                text: [
-                  { text: Math.round(summary.average_fraud_score || 0).toString(), style: 'metricNumber' },
-                  { text: '\nAvg Fraud Score', style: 'metricLabel' }
-                ],
-                alignment: 'center',
-                fillColor: '#FEF2F2',
-                border: [false, false, false, false]
-              }]]
-            },
-            layout: 'noBorders'
-          }
-        ],
-        columnGap: 10,
-        margin: [0, 0, 0, 30]
-      }
-    ];
+  const { summary } = reportData;
 
-    const detailData = [
-      ['Total Claims', summary.total_claims?.toString() || '0', '100%'],
-      ['Pending Claims', summary.pending_claims?.toString() || '0', `${Math.round((summary.pending_claims / summary.total_claims) * 100) || 0}%`],
-      ['Approved Claims', summary.approved_claims?.toString() || '0', `${summary.approval_rate || 0}%`],
-      ['Rejected Claims', summary.rejected_claims?.toString() || '0', `${summary.rejection_rate || 0}%`],
-      ['Under Review', summary.under_review_claims?.toString() || '0', `${Math.round((summary.under_review_claims / summary.total_claims) * 100) || 0}%`],
-      ['Total Claimed Amount', formatCurrency(summary.total_claimed_amount), '-'],
-      ['Average Claim Amount', formatCurrency(summary.average_claim_amount), '-'],
-      ['Total Payout', formatCurrency(summary.total_payout), `${summary.payout_ratio || 0}%`],
-      ['High Risk Claims', summary.high_risk_claims?.toString() || '0', `${Math.round((summary.high_risk_claims / summary.total_claims) * 100) || 0}%`],
-      ['Urgent Claims', summary.urgent_claims?.toString() || '0', `${Math.round((summary.urgent_claims / summary.total_claims) * 100) || 0}%`],
-      ['Unique Customers', summary.unique_customers?.toString() || '0', '-']
-    ];
+  const detailData = [
+    ['Total Claims', summary.total_claims?.toString() || '0', '100%'],
+    ['Pending Claims', summary.pending_claims?.toString() || '0', `${Math.round((summary.pending_claims / summary.total_claims) * 100) || 0}%`],
+    ['Approved Claims', summary.approved_claims?.toString() || '0', `${summary.approval_rate || 0}%`],
+    ['Rejected Claims', summary.rejected_claims?.toString() || '0', `${summary.rejection_rate || 0}%`],
+    ['Under Review', summary.under_review_claims?.toString() || '0', `${Math.round((summary.under_review_claims / summary.total_claims) * 100) || 0}%`],
+    ['Total Claimed Amount', formatCurrency(summary.total_claimed_amount), '-'],
+    ['Average Claim Amount', formatCurrency(summary.average_claim_amount), '-'],
+    ['Total Payout', formatCurrency(summary.total_payout), `${summary.payout_ratio || 0}%`],
+    ['High Risk Claims', summary.high_risk_claims?.toString() || '0', `${Math.round((summary.high_risk_claims / summary.total_claims) * 100) || 0}%`],
+    ['Urgent Claims', summary.urgent_claims?.toString() || '0', `${Math.round((summary.urgent_claims / summary.total_claims) * 100) || 0}%`],
+    ['Unique Customers', summary.unique_customers?.toString() || '0', '-']
+  ];
 
-    return [
-{ text: '📊 Executive Summary', style: 'sectionHeader', margin: [0, 0, 0, 20] },
-      ...keyMetrics,
-      { text: 'Detailed Breakdown', style: 'subsectionHeader', margin: [0, 10, 0, 10] },
-      createStyledTable(
-        ['Metric', 'Value', 'Percentage'],
-        detailData,
-        { widths: ['40%', '30%', '30%'] }
-      )
-    ];
-  };
+  return [
+    createStyledTable(
+      ['Metric', 'Value', 'Percentage'],
+      detailData,
+      { widths: ['40%', '30%', '30%'] }
+    )
+  ];
+};
 
  const generateClaimsByTypeContent = () => {
     if (!reportData?.data) return [];
-
-    const content = [
-      { text: '📈 Claims Analysis by Insurance Type', style: 'sectionHeader', margin: [0, 0, 0, 20] }
-    ];
 
     reportData.data.forEach((typeData, index) => {
       const typeColor = ['#159FDB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'][index % 5];
@@ -465,7 +500,6 @@ const createStyledTable = (headers, data, options = {}) => {
     if (!reportData?.risk_analysis) return [];
 
     const content = [
-      { text: '🚨 Fraud Risk Analysis', style: 'sectionHeader', pageBreak: 'before', margin: [0, 0, 0, 20] },
       createStyledTable(
         ['Risk Level', 'Insurance Type', 'Claims', 'Avg Fraud Score', 'Amount at Risk', 'Approved', 'Rejected', 'Total Payout'],
         reportData.risk_analysis.map(risk => [
@@ -516,7 +550,6 @@ const createStyledTable = (headers, data, options = {}) => {
     if (!reportData?.by_insurance_type) return [];
 
     const content = [
-      { text: '💰 Financial Performance Analysis', style: 'sectionHeader', pageBreak: 'before', margin: [0, 0, 0, 20] },
       createStyledTable(
         ['Insurance Type', 'Claims', 'Total Claimed', 'Total Payout', 'Payout Ratio', 'Approval Rate', 'Amount Saved'],
         reportData.by_insurance_type.map(financial => [
@@ -567,8 +600,6 @@ const createStyledTable = (headers, data, options = {}) => {
     if (!reportData?.processing_times) return [];
 
     const content = [
-      { text: '⚡ Performance & Efficiency Analysis', style: 'sectionHeader', pageBreak: 'before', margin: [0, 0, 0, 20] },
-      { text: 'Processing Time Analysis', style: 'subsectionHeader', margin: [0, 0, 0, 15] },
       createStyledTable(
         ['Priority', 'Status', 'Claims', 'Avg Days', 'Min Days', 'Max Days'],
         reportData.processing_times.map(time => [
@@ -616,58 +647,74 @@ const createStyledTable = (headers, data, options = {}) => {
     return content;
   };
 
-  const generateCustomerAnalysisContent = () => {
-    if (!reportData?.top_customers) return [];
+ const generateCustomerAnalysisContent = () => {
+  if (!reportData?.top_customers) return [];
 
-    const content = [
-      { text: '👥 Customer Insights & Analysis', style: 'sectionHeader', pageBreak: 'before', margin: [0, 0, 0, 20] },
-      { text: 'Top 20 Valued Customers', style: 'subsectionHeader', margin: [0, 0, 0, 15] },
+  const content = [
+    // Split into two smaller tables instead of one large table
+    
+    // First table: Basic customer info and claims
+    { text: 'Top Customers - Claims Overview', style: 'subsectionHeader', margin: [0, 5, 0, 10] },
+    createStyledTable(
+      ['Customer', 'Email', 'Claims', 'Approved', 'Rejected', 'Rate'],
+      reportData.top_customers.slice(0, 20).map(customer => [
+        customer.customer_name || 'Unknown',
+        customer.customer_email || 'N/A',
+        customer.total_claims?.toString() || '0',
+        customer.approved_claims?.toString() || '0',
+        customer.rejected_claims?.toString() || '0',
+        `${customer.approval_rate || 0}%`
+      ]),
+      { 
+        headerColor: '#D97706',
+        fontSize: 8, // Increased from 7 for better readability
+        widths: ['25%', '30%', '10%', '10%', '10%', '15%'] // More specific widths
+      }
+    ),
+    
+    // Second table: Financial information
+    { text: 'Financial Summary', style: 'subsectionHeader', margin: [0, 15, 0, 10] },
+    createStyledTable(
+      ['Customer', 'Total Claimed', 'Total Received', 'Risk Score'],
+      reportData.top_customers.slice(0, 20).map(customer => [
+        customer.customer_name || 'Unknown',
+        formatCurrency(customer.total_claimed),
+        formatCurrency(customer.total_received),
+        Math.round(customer.avg_fraud_score || 0).toString()
+      ]),
+      { 
+        headerColor: '#D97706',
+        fontSize: 8,
+        widths: ['35%', '25%', '25%', '15%']
+      }
+    )
+  ];
+
+  if (reportData.frequency_analysis) {
+    content.push(
+      { text: 'Customer Behavior Patterns', style: 'subsectionHeader', margin: [0, 20, 0, 15] },
       createStyledTable(
-        ['Customer', 'Email', 'Claims', 'Claimed', 'Received', 'Approved', 'Rejected', 'Rate', 'Risk Score'],
-        reportData.top_customers.slice(0, 20).map(customer => [
-          customer.customer_name || 'Unknown',
-          customer.customer_email || 'N/A',
-          customer.total_claims?.toString() || '0',
-          formatCurrency(customer.total_claimed),
-          formatCurrency(customer.total_received),
-          customer.approved_claims?.toString() || '0',
-          customer.rejected_claims?.toString() || '0',
-          `${customer.approval_rate || 0}%`,
-          Math.round(customer.avg_fraud_score || 0).toString()
-        ]),
+        ['Frequency Group', 'Customer Count', 'Avg Risk Score', 'Percentage'],
+        reportData.frequency_analysis.map(freq => {
+          const totalCustomers = reportData.frequency_analysis.reduce((sum, f) => sum + f.customer_count, 0);
+          const percentage = Math.round((freq.customer_count / totalCustomers) * 100);
+          return [
+            freq.frequency_group || 'Unknown',
+            freq.customer_count?.toString() || '0',
+            Math.round(freq.group_avg_fraud_score || 0).toString(),
+            `${percentage}%`
+          ];
+        }),
         { 
           headerColor: '#D97706',
-          fontSize: 7,
-          widths: ['*', '*', '*', '*', '*', '*', '*', '*', '*']
+          widths: ['25%', '25%', '25%', '25%']
         }
       )
-    ];
+    );
+  }
 
-    if (reportData.frequency_analysis) {
-      content.push(
-        { text: 'Customer Behavior Patterns', style: 'subsectionHeader', margin: [0, 20, 0, 15] },
-        createStyledTable(
-          ['Frequency Group', 'Customer Count', 'Avg Risk Score', 'Percentage'],
-          reportData.frequency_analysis.map(freq => {
-            const totalCustomers = reportData.frequency_analysis.reduce((sum, f) => sum + f.customer_count, 0);
-            const percentage = Math.round((freq.customer_count / totalCustomers) * 100);
-            return [
-              freq.frequency_group || 'Unknown',
-              freq.customer_count?.toString() || '0',
-              Math.round(freq.group_avg_fraud_score || 0).toString(),
-              `${percentage}%`
-            ];
-          }),
-          { 
-            headerColor: '#D97706',
-            widths: ['25%', '25%', '25%', '25%']
-          }
-        )
-      );
-    }
-
-    return content;
-  };
+  return content;
+};
 
   const handleExportPDF = async () => {
     try {
@@ -693,7 +740,7 @@ const createStyledTable = (headers, data, options = {}) => {
         throw new Error('PDF library failed to load');
       }
       
-      const reportTitle = reportTypes.find(r => r.id === activeReport)?.name || 'Report';
+const reportTitle = reportTypes.find(r => r.id === activeReport)?.name || 'Report';
       
       let headerContent;
       try {
@@ -744,14 +791,14 @@ const createStyledTable = (headers, data, options = {}) => {
   header: {
     columns: [
       { text: 'PRIME Insurance - Confidential Report', style: 'headerFooter' },
-      { text: getCurrentDateTime(), style: 'headerFooter', alignment: 'right' }
     ],
     margin: [40, 15] // Reduced header margin
   },
   
   footer: (currentPage, pageCount) => ({
     columns: [
-      { text: '© 2024 PRIME Insurance. All rights reserved.', style: 'headerFooter' },
+      { text: ' Generated by Admin on:' + getCurrentDateTime(), style: 'headerFooter' },
+      { text: '© 2025 PRIME Insurance. All rights reserved.', style: 'headerFooter' },
       { text: `Page ${currentPage} of ${pageCount}`, style: 'headerFooter', alignment: 'right' }
     ],
     margin: [40, 15] // Reduced footer margin
@@ -759,7 +806,6 @@ const createStyledTable = (headers, data, options = {}) => {
 
   content: [
     ...headerContent,
-    ...createReportMetadata(),
     
     ...(activeReport === 'overview' ? generateOverviewContent() :
        activeReport === 'claims-by-type' ? generateClaimsByTypeContent() :
@@ -767,36 +813,22 @@ const createStyledTable = (headers, data, options = {}) => {
        activeReport === 'financial' ? generateFinancialContent() :
        activeReport === 'performance' ? generatePerformanceContent() :
        activeReport === 'customer-analysis' ? generateCustomerAnalysisContent() :
-       [{ text: 'No data available for this report type.', style: 'noData', margin: [0, 20] }])
+       [{ text: 'No data available for this report type.', style: 'noData', margin: [0, 20] }]),
   ],
 
   styles: {
-    // NEW COMPACT HEADER STYLES - ADD THESE:
-    companyHeaderCompact: {
-      fontSize: 16, // Reduced from 24
-      bold: true,
-      margin: [0, 0, 0, 2] // Much smaller margin
-    },
-    companySubtitleCompact: {
-      fontSize: 10, // Reduced from 12
-      italics: true,
-      margin: [0, 0, 0, 0]
-    },
-    headerDateCompact: {
-      fontSize: 8, // Reduced
-      color: '#6B7280'
-    },
-    confidentialCompact: {
-      fontSize: 8, // Reduced
-      bold: true,
-      margin: [0, 2, 0, 0] // Smaller margin
-    },
-    reportTitleCompact: {
-      fontSize: 14, // Reduced from 18
-      bold: true,
-      color: '#159FDB',
-      margin: [0, 5, 0, 5] // Much smaller margins
-    },
+     bigCenterHeader: {
+    fontSize: 24,
+    bold: true,
+    color: '#159FDB',
+    margin: [0, 0, 0, 0]
+  },
+  simpleReportTitle: {
+    fontSize: 16,
+    bold: true,
+    color: '#374151',
+    margin: [0, 0, 0, 0]
+  },
     
     // KEEP ALL YOUR EXISTING STYLES AND ADD THESE MODIFICATIONS:
     companyHeader: {
@@ -817,6 +849,12 @@ const createStyledTable = (headers, data, options = {}) => {
       fontSize: 10,
       bold: true,
       margin: [0, 5, 0, 0]
+    },
+    metadataHeader: {
+      fontSize: 11,
+      bold: true,
+      color: '#374151',
+      margin: [0, 0, 0, 3]
     },
     reportTitleBox: {
       fontSize: 18,
