@@ -10,11 +10,14 @@ import Dashboard from './pages/Dashboard';
 import ManageUsers from './pages/ManageUsers';
 import CommunityPost from './pages/Forum/CommunityPost';
 import AdminContentManagement from './pages/AdminPosts';
+import ForgotPassword from './components/forgot-password';
+import ResetPassword from './components/reset-password';
 import Reports from './pages/Report';
 import CommunicationHub from './pages/Chat';
 import InsuranceClientPage from './pages/clientclaim/CLientclaim';
 import AdminClaimsPage from './pages/AdminClaim';
 import UserReportsPage from './pages/UserReport';
+import ForcePasswordReset from './components/force-password';
 
 const App = () => {
     const [role, setRole] = useState(localStorage.getItem('role'));
@@ -47,6 +50,9 @@ const App = () => {
                         <Route path="/forum" element={<CommunityPost />} />
                         <Route path="/chat" element={<CommunicationHub />} />
                         <Route path="/adminforums" element={<AdminContentManagement />} />
+                        <Route path="/force-password-reset" element={<ForcePasswordReset />} />
+                        <Route path="/forgot-password" element={<ForgotPassword />} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
                         <Route path="/reports" element={<Reports />} />
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/manage-users" element={<ManageUsers />} />

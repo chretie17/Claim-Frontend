@@ -69,17 +69,19 @@ const Register = () => {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="relative">
-                                <input 
-                                    type="email" 
-                                    name="email" 
-                                    placeholder="Email" 
-                                    value={formData.email} 
-                                    onChange={handleChange} 
-                                    required 
+                           <div className="relative">
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="your.email@gmail.com"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    required
+                                    pattern="[a-zA-Z0-9._%+-]+@gmail\.com$"
+                                    title="Please enter a valid Gmail address"
                                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300 ease-in-out"
                                 />
-                                <span className="absolute top-0 left-0 transform -translate-y-1/2 translate-x-4 bg-white px-2 text-xs text-gray-500">Email</span>
+                                <span className="absolute top-0 left-0 transform -translate-y-1/2 translate-x-4 bg-white px-2 text-xs text-gray-500">Gmail Address</span>
                             </div>
                             <div className="relative">
                                 <input 
